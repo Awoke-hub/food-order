@@ -1,0 +1,649 @@
+/* CSS for All */
+* {
+  margin: 0 0;
+  padding: 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 1%;
+}
+/* Logo Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo {
+  padding: 20px 0;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Logo Image Styling */
+.restaurant-logo {
+  height: 100px; /* Fixed height */
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
+}
+
+/* Hover Effects */
+.logo:hover {
+  transform: translateY(-2px);
+}
+
+.logo:hover .restaurant-logo {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .restaurant-logo {
+    height: 60px;
+  }
+
+  .logo {
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .restaurant-logo {
+    height: 50px;
+  }
+}
+.img-responsive.img-curve {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+/* Food Menu Box Container */
+.food-menu-box {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.food-menu-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Food Image Section */
+.food-menu-img {
+  flex: 0 0 45%;
+  overflow: hidden;
+}
+
+.food-item-img {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.food-menu-box:hover .food-item-img {
+  transform: scale(1.05);
+}
+
+/* Food Description Section */
+.food-menu-desc {
+  flex: 1;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.food-menu-desc h4 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.food-price {
+  color: #ff6b6b;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.food-detail {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .food-menu-box {
+    flex-direction: column;
+  }
+
+  .food-menu-img {
+    flex: 0 0 auto;
+  }
+
+  .food-item-img {
+    min-height: 200px;
+  }
+}
+
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-white {
+  color: white;
+}
+
+.clearfix {
+  clear: both;
+  float: none;
+}
+
+a {
+  color: #45637d;
+  text-decoration: none;
+}
+a:hover {
+  color: #263746;
+}
+
+.btn {
+  padding: 1%;
+  border: none;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+.btn-primary {
+  background-color: #45637d;
+  color: white;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  color: white;
+  background-color: #263746;
+}
+h2 {
+  color: #2f3542;
+  font-size: 2rem;
+  margin-bottom: 2%;
+}
+h3 {
+  font-size: 1.5rem;
+}
+.float-container {
+  position: relative;
+}
+.float-text {
+  position: absolute;
+  bottom: 50px;
+  left: 40%;
+}
+fieldset {
+  border: 1px solid white;
+  margin: 5%;
+  padding: 3%;
+  border-radius: 5px;
+}
+
+.error {
+  padding: 2%;
+  color: red;
+}
+.success {
+  padding: 2%;
+  color: green;
+}
+/* CSSS for navbar section */
+
+.logo {
+  width: 10%;
+  float: left;
+}
+.menu {
+  line-height: 60px;
+  font-size: 1.4rem;
+}
+.menu ul {
+  list-style-type: none;
+}
+
+.menu ul li {
+  display: inline;
+  padding: 1%;
+  font-weight: bold;
+}
+
+/* CSS for Food SEarch Section */
+
+.food-search {
+  background-image: url(../images/bg1.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 7% 0;
+}
+
+.food-search input[type="search"] {
+  width: 50%;
+  padding: 1%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+}
+
+/* CSS for Categories */
+.categories {
+  padding: 4% 0;
+}
+
+.box-3 {
+  width: 28%;
+  float: left;
+  margin: 2%;
+}
+
+/* CSS for Food Menu */
+.food-menu {
+  background-color: #ececec;
+  padding: 4% 0;
+}
+.food-menu-box {
+  width: 43%;
+  margin: 1%;
+  padding: 2%;
+  float: left;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.food-menu-img {
+  width: 20%;
+  float: left;
+}
+
+.food-menu-desc {
+  width: 70%;
+  float: left;
+  margin-left: 8%;
+}
+
+.food-price {
+  font-size: 1.2rem;
+  margin: 2% 0;
+}
+.food-detail {
+  font-size: 1rem;
+  color: #747d8c;
+}
+
+/* CSS for Social */
+.social ul {
+  list-style-type: none;
+}
+.social ul li {
+  display: inline;
+  padding: 1%;
+}
+
+/* for Order Section */
+.order {
+  width: 50%;
+  margin: 0 auto;
+}
+.input-responsive {
+  width: 96%;
+  padding: 1%;
+  margin-bottom: 3%;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+.order-label {
+  margin-bottom: 1%;
+  font-weight: bold;
+}
+
+/* CSS for Mobile Size or Smaller Screen */
+
+@media only screen and (max-width: 768px) {
+  .logo {
+    width: 80%;
+    float: none;
+    margin: 1% auto;
+  }
+
+  .menu ul {
+    text-align: center;
+  }
+
+  .food-search input[type="search"] {
+    width: 90%;
+    padding: 2%;
+    margin-bottom: 3%;
+  }
+
+  .btn {
+    width: 91%;
+    padding: 2%;
+  }
+
+  .food-search {
+    padding: 10% 0;
+  }
+
+  .categories {
+    padding: 20% 0;
+  }
+  h2 {
+    margin-bottom: 10%;
+  }
+  .box-3 {
+    width: 100%;
+    margin: 4% auto;
+  }
+
+  .food-menu {
+    padding: 20% 0;
+  }
+
+  .food-menu-box {
+    width: 90%;
+    padding: 5%;
+    margin-bottom: 5%;
+  }
+  .social {
+    padding: 5% 0;
+  }
+  .order {
+    width: 100%;
+  }
+}
+/* Your orders Table */
+
+.content-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.content-table thead tr {
+  background-color: #2596be;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.content-table th,
+.content-table td {
+  padding: 12px 15px;
+}
+
+.content-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.content-table tbody tr:last-of-type {
+  border-bottom: 2px solid #2596be;
+}
+
+.content-table tbody tr.active-row {
+  font-weight: bold;
+  color: #2596be;
+}
+/* Food order page css */
+.food-order {
+  background-image: url(../images/bg3.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 7% 0;
+}
+
+.food-order input[type="search"] {
+  width: 50%;
+  padding: 1%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+}
+.social,
+.footer {
+  background-color: #2f3542;
+  padding: 30px 0;
+  color: white;
+}
+
+.social {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social ul {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.social img {
+  width: 45px;
+  height: 42px;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.social img:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+.footer {
+  background-color: #263746;
+  padding: 20px 0;
+  font-size: 0.9rem;
+}
+
+.footer p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer a {
+  color: #4dabf7;
+  text-decoration: none;
+  transition: color 0.3s;
+  font-weight: 600;
+}
+
+.footer a:hover {
+  color: #74b9ff;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 768px) {
+  .social ul {
+    gap: 15px;
+  }
+
+  .social img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .footer {
+    padding: 15px 0;
+    font-size: 0.8rem;
+  }
+}
+/* Login Wrapper */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+  padding: 40px 0;
+}
+
+/* Login Container */
+.container.my-4 {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.container.my-4 h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 28px;
+}
+
+.container.my-4 p {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #7f8c8d;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.is-invalid {
+  border-color: #e74c3c;
+}
+
+.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+.invalid-feedback {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Button Styles */
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn[type="reset"] {
+  background-color: #e74c3c;
+  margin-left: 10px;
+}
+
+.btn[type="reset"]:hover {
+  background-color: #c0392b;
+}
+
+/* Alert Styles */
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Link Styles */
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 20px 0;
+  }
+
+  .container.my-4 {
+    padding: 20px;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .btn[type="reset"] {
+    margin-left: 0;
+  }
+}
