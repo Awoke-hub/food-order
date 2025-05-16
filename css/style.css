@@ -139,7 +139,21 @@
     min-height: 200px;
   }
 }
+@media (max-width: 480px) {
+  .food-menu-box {
+    flex-direction: column;
+  }
 
+  .food-menu-img {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .food-item-img {
+    height: auto;
+    min-height: 200px;
+  }
+}
 .text-right {
   text-align: right;
 }
@@ -645,5 +659,120 @@ a:hover {
 
   .btn[type="reset"] {
     margin-left: 0;
+  }
+}
+@media (max-width: 460px) {
+  /* Food Menu Box */
+  .food-menu-box {
+    margin: 10px 0;
+    border-radius: 8px;
+    flex-direction: column;
+  }
+
+  /* Food Image */
+  .food-menu-img {
+    width: 100% !important;
+    height: 180px !important;
+    flex: none;
+  }
+
+  .food-item-img {
+    min-height: 180px !important;
+    border-radius: 8px 8px 0 0;
+  }
+
+  /* Food Description */
+  .food-menu-desc {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 15px !important;
+  }
+
+  .food-menu-desc h4 {
+    font-size: 1.3rem !important;
+    margin-bottom: 8px;
+  }
+
+  .food-price {
+    font-size: 1.1rem !important;
+    margin: 10px 0;
+  }
+
+  .food-detail {
+    font-size: 0.9rem !important;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Order Button */
+  .food-menu-desc .btn-primary {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 0.95rem !important;
+    margin-top: 10px;
+  }
+
+  /* Text Truncation */
+  .food-detail {
+    max-height: 4.2em; /* 3 lines * 1.4 line-height */
+  }
+}
+@media (min-width: 461px) and (max-width: 760px) {
+  /* Food Menu Container */
+  .food-menu-box {
+    margin: 15px 0;
+    flex-direction: row;
+    border-radius: 10px;
+  }
+
+  /* Food Image Section */
+  .food-menu-img {
+    flex: 0 0 45%;
+    height: 220px;
+  }
+
+  .food-item-img {
+    min-height: 220px;
+    border-radius: 10px 0 0 10px;
+  }
+
+  /* Food Description Section */
+  .food-menu-desc {
+    padding: 20px;
+    flex: 0 0 55%;
+  }
+
+  .food-menu-desc h4 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+  }
+
+  .food-price {
+    font-size: 1.2rem;
+    margin: 15px 0;
+  }
+
+  .food-detail {
+    font-size: 1rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-height: 6em; /* 4 lines * 1.5 line-height */
+  }
+
+  /* Order Button */
+  .food-menu-desc .btn-primary {
+    padding: 12px 25px;
+    font-size: 1rem;
+    margin-top: 15px;
+  }
+
+  /* Section Heading */
+  .food-menu > .container > h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
   }
 }
