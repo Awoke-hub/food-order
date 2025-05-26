@@ -1,4 +1,3 @@
-
 <?php include('partials-front/menu.php'); ?>
 
 <?php 
@@ -50,7 +49,6 @@
 
                 <div class="food-menu-img">
                     <?php 
-                    
                         //CHeck whether the image is available or not
                         if($image_name=="")
                         {
@@ -64,9 +62,7 @@
                             <img src="<?php echo SITEURL; ?>images/food/<?php echo $image_name; ?>" alt="Chicke Hawain Pizza" class="img-responsive img-curve">
                             <?php
                         }
-                    
                     ?>
-                    
                 </div>
 
                 <div class="food-menu-desc">
@@ -77,79 +73,79 @@
                     <input type="hidden" name="price" value="<?php echo $price; ?>">
 
                     <div class="order-label" style="color:white;">Quantity</div>
-                    <input type="number" name="qty" class="input-responsive" value="1" required>
-                    
+                    <!-- Added min attribute to prevent negative/zero values -->
+                    <input type="number" name="qty" class="input-responsive" value="1" min="1" required>
                 </div>
-
             </fieldset>
             
             <fieldset>
                 <input type="submit" name="submit" value="Confirm Order" class="btn btn-primary">
             </fieldset>
-
         </form>
 
         <?php 
-
             //CHeck whether submit button is clicked or not
             if(isset($_POST['submit']))
             {
                 if(empty($_SESSION["u_id"]))
-{
-header('location:login.php');
-}
-else{
-  // Get all the details from the form
+                {
+                    header('location:login.php');
+                }
+                else
+                {
+                    // Get all the details from the form
+                    $food = $_POST['food'];
+                    $price = $_POST['price'];
+                    $qty = $_POST['qty'];
 
-  $food = $_POST['food'];
-  $price = $_POST['price'];
-  $qty = $_POST['qty'];
+                    // Validate quantity
+                    $qty = filter_var($qty, FILTER_VALIDATE_INT, array(
+                        'options' => array(
+                            'min_range' => 1
+                        )
+                    ));
 
-  $total = $price * $qty; // total = price x qty 
+                    if($qty === false) {
+                        $_SESSION['order'] = "<div class='error text-center'>Invalid quantity. Please enter at least 1 item.</div>";
+                        header('location:'.SITEURL);
+                        exit();
+                    }
 
-  $order_date = date("Y-m-d h:i:sa"); //Order DAte
+                    $total = $price * $qty; // total = price x qty 
+                    $order_date = date("Y-m-d h:i:sa"); //Order DAte
+                    $status = "Ordered";  // Ordered, On Delivery, Delivered, Cancelled
+                    $u_id = $_SESSION["u_id"];
 
-  $status = "Ordered";  // Ordered, On Delivery, Delivered, Cancelled
-  $u_id=$_SESSION["u_id"];
-  
+                    //Save the Order in Databaase
+                    //Create SQL to save the data
+                    $sql2 = "INSERT INTO tbl_order SET 
+                        food = '$food',
+                        price = $price,
+                        qty = $qty,
+                        total = $total,
+                        order_date = '$order_date',
+                        status = '$status',
+                        u_id = '$u_id'";
 
+                    //Execute the Query
+                    $res2 = mysqli_query($conn, $sql2);
 
-
-  //Save the Order in Databaase
-  //Create SQL to save the data
-  $sql2 = "INSERT INTO tbl_order SET 
-      food = '$food',
-      price = $price,
-      qty = $qty,
-      total = $total,
-      order_date = '$order_date',
-      status = '$status',
-      u_id='$u_id'
-       ";
-
-  //echo $sql2; die();
-
-  //Execute the Query
-  $res2 = mysqli_query($conn, $sql2);
-
-  //Check whether query executed successfully or not
-  if($res2==true)
-  {
-      //Query Executed and Order Saved
-      
-      $_SESSION['order'] = "<div class='success text-center'>Food Ordered Successfully.</div>";
-      header('location:'.SITEURL);
-  }
-  else
-  {
-      //Failed to Save Order
-      $_SESSION['order'] = "<div class='error text-center'>Failed to Order Food.</div>";
-      header('location:'.SITEURL);
-  }
-}
+                    //Check whether query executed successfully or not
+                    if($res2==true)
+                    {
+                        //Query Executed and Order Saved
+                        $_SESSION['order'] = "<div class='success text-center'>Food Ordered Successfully.</div>";
+                        header('location:'.SITEURL);
+                    }
+                    else
+                    {
+                        //Failed to Save Order
+                        $_SESSION['order'] = "<div class='error text-center'>Failed to Order Food.</div>";
+                        header('location:'.SITEURL);
+                    }
+                }
             }
         ?>
-
     </div>
 </section>
 <!-- fOOD sEARCH Section Ends Here -->
