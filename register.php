@@ -1,221 +1,159 @@
-
 <?php
-    
-    $showAlert = false; 
-    $showError = false; 
-    $exists=false;
+// Initialize variables
+$errors = [];
+$showAlert = false;
+include('config/constants.php');
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // CSRF protection
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $errors[] = "Invalid form submission";
+    }
+    // Sanitize and validate inputs
+    $username = trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
+    $password = $_POST['password'];
+    $cpassword = $_POST['cpassword'];
+    $customer_name = trim(filter_input(INPUT_POST, 'customer_name', FILTER_SANITIZE_STRING));
+    $customer_email = trim(filter_input(INPUT_POST, 'customer_email', FILTER_SANITIZE_EMAIL));
+    $customer_contact = trim(filter_input(INPUT_POST, 'customer_contact', FILTER_SANITIZE_STRING));
+    $customer_address = trim(filter_input(INPUT_POST, 'customer_address', FILTER_SANITIZE_STRING));
+    // Validation rules
+    if (empty($username)) {
+        $errors[] = "Username is required";
+    }
+    if (!filter_var($customer_email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email format";
+    }
+
+    if (!preg_match('/^[0-9]{10}$/', $customer_contact)) {
+        $errors[] = "Phone number must be exactly 10 digits";
+    }
+    if ($password !== $cpassword) {
+        $errors[] = "Passwords do not match";
+    }
+    if (strlen($password) < 8) {
+        $errors[] = "Password must be at least 8 characters";
+    }
+    // Check existing users
+    if (empty($errors)) {
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR customer_email = ? OR customer_contact = ?");
+        $stmt->bind_param("sss", $username, $customer_email, $customer_contact);
+        $stmt->execute();
+        $result = $stmt->get_result();
         
-    if($_SERVER["REQUEST_METHOD"] == "POST") {
-          
-        // Include file which makes the
-        // Database Connection.
-        include('config/constants.php');   
-        
-        $username = $_POST["username"]; 
-        $password = $_POST["password"]; 
-        $cpassword = $_POST["cpassword"];
-        $customer_name=$_POST["customer_name"];
-        $customer_email=$_POST["customer_email"];
-        $customer_contact=$_POST["customer_contact"];
-        $customer_address=$_POST["customer_address"];
-        
-        $sql = "Select * from users where username='$username'";
-        
-        $result = mysqli_query($conn, $sql);
-        
-        $num = mysqli_num_rows($result); 
-        
-        // This sql query is use to check if
-        // the username is already present 
-        // or not in our Database
-        if($num == 0) {
-            if(($password == $cpassword) && $exists==false) {
-        
-                $hash = password_hash($password, 
-                                    PASSWORD_DEFAULT);
-                    
-                // Password Hashing is used here. 
-                $sql = "INSERT INTO `users` ( `username`, 
-                    `password`,`customer_name`,`customer_email`,`customer_contact`,`customer_address`,`created_at`) VALUES ('$username', 
-                    '$hash','$customer_name','$customer_email','$customer_contact','$customer_address', current_timestamp())";
-        
-                $result = mysqli_query($conn, $sql);
-        
-                if ($result) {
-                    $showAlert = true; 
-                }
-            } 
-            else { 
-                $showError = "Passwords do not match"; 
-            }      
-        }// end if 
-        
-       if($num>0) 
-       {
-          $exists="Username not available"; 
-       } 
-        
-    }//end if   
-        
-    ?>
-        
-    <!doctype html>
-        
-    <html lang="en">
-      
-    <head>
-        
-        <!-- Required meta tags --> 
-        <meta charset="utf-8"> 
-        <meta name="viewport" content=
-            "width=device-width, initial-scale=1, 
-            shrink-to-fit=no">
-        
-        <!-- Bootstrap CSS --> 
-        <link rel="stylesheet" href=
-    "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-            integrity=
-    "sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-            crossorigin="anonymous">  
-            <link rel="stylesheet" href="css/style.css">
-    </head>
-        
-    <body>
+        if ($result->num_rows > 0) {
+            $errors[] = "Username, email, or phone number already exists";
+        }
+        $stmt->close();
+    }
+    // Insert new user
+    if (empty($errors)) {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO users (username, password, customer_name, customer_email, customer_contact, customer_address, created_at) 
+                              VALUES (?, ?, ?, ?, ?, ?, current_timestamp())");
+        $stmt->bind_param("ssssss", $username, $hash, $customer_name, $customer_email, $customer_contact, $customer_address);
+
+        if ($stmt->execute()) {
+            $showAlert = true;
+            // Clear form data
+            $_POST = array();
+        } else {
+            $errors[] = "Database error: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+}
+// Generate CSRF token
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+$conn->close();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - Food Order</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
     <section class="navbar">
         <div class="container">
             <div class="logo">
-                <a href="http://localhost/food-order/" title="Logo">
+                <a href="http://localhost/food-order">
                     <img src="images/logo.jp" alt="Restaurant Logo" class="Restaurant-logo">
                 </a>
             </div>
-<br>
             <div class="clearfix"></div>
         </div>
     </section>
-        
-    <?php
-        
-        if($showAlert) {
-        
-            echo ' <div class="alert alert-success 
-                alert-dismissible fade show" role="alert">
-        
-                <strong>Success!</strong> Your account is 
-                now created and you can <a href="login.php">login.</a> 
-                <button type="button" class="close"
-                    data-dismiss="alert" aria-label="Close"> 
-                    <span aria-hidden="true">×</span> 
-                </button> 
-            </div> '; 
-        }
-        
-        if($showError) {
-        
-            echo ' <div class="alert alert-danger 
-                alert-dismissible fade show" role="alert"> 
-            <strong>Error!</strong> '. $showError.'
-        
-           <button type="button" class="close" 
-                data-dismiss="alert aria-label="Close">
-                <span aria-hidden="true">×</span> 
-           </button> 
-         </div> '; 
-       }
-            
-        if($exists) {
-            echo ' <div class="alert alert-danger 
-                alert-dismissible fade show" role="alert">
-        
-            <strong>Error!</strong> '. $exists.'
-            <button type="button" class="close" 
-                data-dismiss="alert" aria-label="Close"> 
-                <span aria-hidden="true">×</span> 
-            </button>
-           </div> '; 
-         }
-       
-    ?>
-        
-    <div class="container my-4 ">
-        
-        <h2 class="text-center">Signup Here</h2> 
+
+    <div class="container my-4">
+        <?php if ($showAlert): ?>
+            <div class="alert alert-success">
+                Account created successfully! <a href="login.php">Login here</a>
+            </div>
+            <?php header("Refresh: 5; url=login.php"); ?>
+        <?php endif; ?>
+
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul>
+                    <?php foreach ($errors as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <h2 class="text-center">Signup Here</h2>
         <h5>*All fields are required</h5>
+        
         <form action="" method="post">
-        
-            <div class="form-group"> 
-                <label for="username">Username</label> 
-            <input type="text" class="form-control" id="username"
-                name="username" aria-describedby="emailHelp" required>    
-            </div>
-            <div class="form-group"> 
-                <label for="username">Full Name</label> 
-            <input type="text" class="form-control" 
-                name="customer_name" aria-describedby="emailHelp" required>    
-            </div>
-            <div class="form-group"> 
-                <label for="password">Password</label> 
-                <input type="password" class="form-control"
-                id="password" name="password" required> 
-            </div>
-        
-            <div class="form-group"> 
-                <label for="cpassword">Confirm Password</label> 
-                <input type="password" class="form-control"
-                    id="cpassword" name="cpassword" required>
-        
-                <small id="emailHelp" class="form-text text-muted">
-                Make sure to type the same password
-                </small> 
-                
-            </div>  
-            <div class="form-group"> 
-                <label for="username">Email</label> 
-            <input type="email" class="form-control" 
-                name="customer_email" aria-describedby="emailHelp" required>    
-            </div>
-            <div class="form-group"> 
-                <label for="username">Phone</label> 
-            <input type="number" required class="form-control" 
-                name="customer_contact" aria-describedby="emailHelp">    
-                
-                <small id="emailHelp" class="form-text text-muted">
-                Please Enter a valid 10 digit mobile number
-                </small> 
-            </div>
-            <label for="address">Address</label> 
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+            
             <div class="form-group">
-               
-                <textarea name="customer_address"
-                class="form-control" required>
-         </textarea></div>    
-        
-            <button type="submit" class="btn btn-primary">
-            SignUp
-            </button> 
-        </form> 
+                <label>Username</label>
+                <input type="text" class="form-control" name="username" 
+                       value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" class="form-control" name="customer_name" 
+                       value="<?= htmlspecialchars($_POST['customer_name'] ?? '') ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password </label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" class="form-control" name="cpassword" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" name="customer_email" 
+                       value="<?= htmlspecialchars($_POST['customer_email'] ?? '') ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" class="form-control" name="customer_contact" 
+                       value="<?= htmlspecialchars($_POST['customer_contact'] ?? '') ?>" required>
+                <small class="text-muted">10-digit number only</small>
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>
+                <textarea class="form-control" name="customer_address" required><?= 
+                    htmlspecialchars($_POST['customer_address'] ?? '') ?></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
     </div>
-        
-    <!-- Optional JavaScript --> 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        
-    <script src="
-    https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="
-    sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous">
-    </script>
-        
-    <script src="
-    https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity=
-    "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
-        crossorigin="anonymous">
-    </script>
-        
-    <script src="
-    https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" 
-        integrity=
-    "sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous">
-    </script> 
-  <?php include('partials-front/footer.php'); ?>
+    <?php include('partials-front/footer.php'); ?>
+</body>
+</html>

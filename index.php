@@ -109,7 +109,6 @@
                     $description = $row['description'];
                     $image_name = $row['image_name'];
                     ?>
-
 <div class="food-menu-box">
     <div class="food-menu-img">
         <?php 
@@ -146,13 +145,7 @@
                 //Food Not Available 
                 echo "<div class='error'>Food not available.</div>";
             }
-            
             ?>
-
-            
-
- 
-
             <div class="clearfix"></div>
 
             

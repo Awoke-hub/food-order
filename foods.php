@@ -1,10 +1,7 @@
-
-    <?php include('partials-front/menu.php'); ?>
-
+<?php include('partials-front/menu.php'); ?>
     <!-- fOOD sEARCH Section Starts Here -->
     <section class="food-search text-center">
         <div class="container">
-            
             <form action="<?php echo SITEURL; ?>food-search.php" method="POST">
                 <input type="search" name="search" placeholder="Search for Food.." required>
                 <input type="submit" name="submit" value="Search" class="btn btn-primary">
@@ -13,9 +10,6 @@
         </div>
     </section>
     <!-- fOOD sEARCH Section Ends Here -->
-
-
-
     <!-- fOOD MEnu Section Starts Here -->
     <section class="food-menu">
         <div class="container">
@@ -58,13 +52,12 @@
                                     {
                                         //Image Available
                                         ?>
-                                        <img src="<?php echo SITEURL; ?>images/food/<?php echo $image_name; ?>" alt="Chicke Hawain Pizza" class="img-responsive img-curve">
+                                        <img src="<?php echo SITEURL; ?>images/food/<?php echo $image_name; ?>" alt=" Pizza" class="img-responsive img-curve">
                                         <?php
                                     }
                                 ?>
                                 
                             </div>
-
                             <div class="food-menu-desc">
                                 <h4><?php echo $title; ?></h4>
                                 <p class="food-price">ETB <?php echo $price; ?></p>
@@ -72,7 +65,6 @@
                                     <?php echo $description; ?>
                                 </p>
                                 <br>
-
                                 <a href="<?php echo SITEURL; ?>order.php?food_id=<?php echo $id; ?>" class="btn btn-primary">Order Now</a>
                             </div>
                         </div>
@@ -86,18 +78,8 @@
                     echo "<div class='error'>Food not found.</div>";
                 }
             ?>
-
-            
-
-            
-
             <div class="clearfix"></div>
-
-            
-
         </div>
-
     </section>
     <!-- fOOD Menu Section Ends Here -->
-
     <?php include('partials-front/footer.php'); ?>
