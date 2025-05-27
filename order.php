@@ -1,5 +1,4 @@
 <?php include('partials-front/menu.php'); ?>
-
 <?php 
     //CHeck whether food id is set or not
     if(isset($_GET['food_id']))
