@@ -18,7 +18,7 @@
     <!-- footer Section Starts Here -->
     <section class="footer">
         <div class="container text-center">
-            <p>All rights reserved. Designed It Students <a href="http://localhost/food-order-main/images/ItSquad.jpg" title="Logo">ItSquad</a></p>
+            <p>All rights reserved. Designed by It Students <a href="http://localhost/food-order-main/images/ItSquad.jpg" title="Logo">ItSquad</a></p>
         </div>
     </section>
 </body>

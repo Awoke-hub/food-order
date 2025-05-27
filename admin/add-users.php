@@ -2,124 +2,117 @@
 <div class="main-content">
     <div class="wrapper">
         <h1>Add User</h1>
-
         <br><br>
 
         <?php 
-            if(isset($_SESSION['add'])) //Checking whether the SEssion is Set of Not
-            {
-                echo $_SESSION['add']; //Display the SEssion Message if SEt
-                unset($_SESSION['add']); //Remove Session Message
+            if (isset($_SESSION['add'])) {
+                echo $_SESSION['add'];
+                unset($_SESSION['add']);
             }
         ?>
-
         <form action="" method="POST">
-
             <table class="tbl-30">
                 <tr>
                     <td>Username: </td>
-                    <td>
-                        <input type="text" name="username" placeholder="User name">
-                    </td>
+                    <td><input type="text" name="username" placeholder="User name" required></td>
                 </tr>
                 <tr>
                     <td>Password: </td>
-                    <td>
-                        <input type="password" name="password" placeholder="User Password">
-                    </td>
+                    <td><input type="password" name="password" placeholder="User Password" required></td>
                 </tr>
                 <tr>
                     <td>Full Name: </td>
-                    <td>
-                        <input type="text" name="customer_name" placeholder="Full Name">
-                    </td>
+                    <td><input type="text" name="customer_name" placeholder="Full Name" required></td>
                 </tr>
                 <tr>
                     <td>Email: </td>
-                    <td>
-                        <input type="text" name="customer_email" placeholder="User email">
-                    </td>
+                    <td><input type="email" name="customer_email" placeholder="User email" required></td>
                 </tr>
                 <tr>
                     <td>Contact: </td>
-                    <td>
-                        <input type="text" name="customer_contact" placeholder="User contact">
-                    </td>
+                    <td><input type="text" name="customer_contact" placeholder="10-digit phone" pattern="\d{10}" required></td>
                 </tr>
                 <tr>
                     <td>Address: </td>
-                    <td>
-                        <input type="text" name="customer_address" placeholder="User address">
-                    </td>
+                    <td><input type="text" name="customer_address" placeholder="User address" required></td>
                 </tr>
-
                 <tr>
                     <td colspan="2">
                         <input type="submit" name="submit" value="Add User" class="btn-secondary">
                     </td>
                 </tr>
-
             </table>
-
         </form>
-
-
     </div>
 </div>
-
 <?php include('partials/footer.php'); ?>
 
-
 <?php 
-    //Process the Value from Form and Save it in Database
+// Check if the form was submitted
+if (isset($_POST['submit'])) {
+    // Include DB config (already has session_start and $conn)
+    include('../config/constants.php'); 
 
-    //Check whether the submit button is clicked or not
+    // Sanitize & validate inputs
+    $username = trim($_POST['username']);
+    $password_raw = $_POST['password'];
+    $customer_name = trim($_POST['customer_name']);
+    $customer_email = filter_var(trim($_POST['customer_email']), FILTER_SANITIZE_EMAIL);
+    $customer_contact = trim($_POST['customer_contact']);
+    $customer_address = trim($_POST['customer_address']);
 
-    if(isset($_POST['submit']))
-    {
-        // Button Clicked
-        //echo "Button Clicked";
+    // Validate fields
+    $errors = [];
 
-        //1. Get the Data from form
-      
-        $hash = ($_POST['password']);
-        $password= password_hash($hash, 
-        PASSWORD_DEFAULT); 
-        $full_name = $_POST['customer_name'];
-        $username = $_POST['username'];
-        $customer_email= $_POST['customer_email'];
-        $customer_contact= $_POST['customer_contact'];
-        $customer_address= $_POST['customer_address'];
-
-
-        //2. SQL Query to Save the data into database
-        $sql = "INSERT INTO `users` ( `username`, 
-        `password`,`customer_name`,`customer_email`,`customer_contact`,`customer_address`,`created_at`) VALUES ('$username', 
-        '$password','$full_name','$customer_email','$customer_contact','$customer_address', current_timestamp())";
- 
-        //3. Executing Query and Saving Data into Datbase
-        $res = mysqli_query($conn, $sql) or die(mysqli_error());
-
-        //4. Check whether the (Query is Executed) data is inserted or not and display appropriate message
-        if($res==TRUE)
-        {
-            //Data Inserted
-            //echo "Data Inserted";
-            //Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='success'>User Added Successfully.</div>";
-            //Redirect Page to Manage Admin
-            header("location:".SITEURL.'admin/manage-users.php');
-        }
-        else
-        {
-            //FAiled to Insert DAta
-            //echo "Faile to Insert Data";
-            //Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='error'>Failed to Add User.</div>";
-            //Redirect Page to Add Admin
-            header("location:".SITEURL.'admin/add-users.php');
-        }
-
+    if (empty($username) || empty($password_raw) || empty($customer_name) || empty($customer_email) || empty($customer_contact) || empty($customer_address)) {
+        $errors[] = "All fields are required.";
     }
-    
+
+    if (!filter_var($customer_email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email format.";
+    }
+
+    if (!preg_match('/^\d{10}$/', $customer_contact)) {
+        $errors[] = "Phone number must be exactly 10 digits.";
+    }
+
+    if (strlen($password_raw) < 8) {
+        $errors[] = "Password must be at least 8 characters.";
+    }
+
+    // Check for existing user with same username, email or contact
+    if (empty($errors)) {
+        $check = $conn->prepare("SELECT * FROM users WHERE username = ? OR customer_email = ? OR customer_contact = ?");
+        $check->bind_param("sss", $username, $customer_email, $customer_contact);
+        $check->execute();
+        $result = $check->get_result();
+        if ($result->num_rows > 0) {
+            $errors[] = "Username, email, or contact already exists.";
+        }
+        $check->close();
+    }
+
+    // If no errors, insert the user
+    if (empty($errors)) {
+        $password = password_hash($password_raw, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO users (username, password, customer_name, customer_email, customer_contact, customer_address, created_at) 
+                                VALUES (?, ?, ?, ?, ?, ?, current_timestamp())");
+        $stmt->bind_param("ssssss", $username, $password, $customer_name, $customer_email, $customer_contact, $customer_address);
+
+        if ($stmt->execute()) {
+            $_SESSION['add'] = "<div class='success'>User added successfully.</div>";
+            header("Location: " . SITEURL . "admin/manage-users.php");
+            exit;
+        } else {
+            $_SESSION['add'] = "<div class='error'>Failed to add user: " . htmlspecialchars($stmt->error) . "</div>";
+            header("Location: " . SITEURL . "admin/add-users.php");
+            exit;
+        }
+    } else {
+        // Store error messages in session
+        $_SESSION['add'] = "<div class='error'>" . implode("<br>", $errors) . "</div>";
+        header("Location: " . SITEURL . "admin/add-users.php");
+        exit;
+    }
+}
 ?>
