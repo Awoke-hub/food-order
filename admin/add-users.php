@@ -3,7 +3,6 @@
     <div class="wrapper">
         <h1>Add User</h1>
         <br><br>
-
         <?php 
             if (isset($_SESSION['add'])) {
                 echo $_SESSION['add'];
@@ -46,7 +45,6 @@
     </div>
 </div>
 <?php include('partials/footer.php'); ?>
-
 <?php 
 // Check if the form was submitted
 if (isset($_POST['submit'])) {
@@ -63,7 +61,6 @@ if (isset($_POST['submit'])) {
 
     // Validate fields
     $errors = [];
-
     if (empty($username) || empty($password_raw) || empty($customer_name) || empty($customer_email) || empty($customer_contact) || empty($customer_address)) {
         $errors[] = "All fields are required.";
     }
@@ -79,7 +76,6 @@ if (isset($_POST['submit'])) {
     if (strlen($password_raw) < 8) {
         $errors[] = "Password must be at least 8 characters.";
     }
-
     // Check for existing user with same username, email or contact
     if (empty($errors)) {
         $check = $conn->prepare("SELECT * FROM users WHERE username = ? OR customer_email = ? OR customer_contact = ?");
@@ -91,14 +87,12 @@ if (isset($_POST['submit'])) {
         }
         $check->close();
     }
-
     // If no errors, insert the user
     if (empty($errors)) {
         $password = password_hash($password_raw, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("INSERT INTO users (username, password, customer_name, customer_email, customer_contact, customer_address, created_at) 
                                 VALUES (?, ?, ?, ?, ?, ?, current_timestamp())");
         $stmt->bind_param("ssssss", $username, $password, $customer_name, $customer_email, $customer_contact, $customer_address);
-
         if ($stmt->execute()) {
             $_SESSION['add'] = "<div class='success'>User added successfully.</div>";
             header("Location: " . SITEURL . "admin/manage-users.php");

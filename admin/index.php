@@ -1,6 +1,5 @@
 
 <?php include('partials/menu.php'); ?>
-
         <!-- Main Content Section Starts -->
         <div class="main-content">
             <div class="wrapper">
@@ -25,7 +24,6 @@
                         //Count Rows
                         $count = mysqli_num_rows($res);
                     ?>
-
                     <h1><?php echo $count; ?></h1>
                     <br />
                     Categories
@@ -46,9 +44,7 @@
                     <br />
                     Foods
                 </div>
-
                 <div class="col text-center">
-                    
                     <?php 
                         //Sql Query 
                         $sql3 = "SELECT * FROM tbl_order";
@@ -57,13 +53,11 @@
                         //Count Rows
                         $count3 = mysqli_num_rows($res3);
                     ?>
-
                     <h1><?php echo $count3; ?></h1>
                     <br />
                     Total Orders
                 </div>
                 <div class="col text-center">
-                    
                     <?php 
                         //Sql Query 
                         $sql3 = "SELECT * FROM users";
@@ -72,17 +66,14 @@
                         //Count Rows
                         $count3 = mysqli_num_rows($res3);
                     ?>
-
                     <h1><?php echo $count3; ?></h1>
                     <br />
                     Total Users
                 </div>
 
                 <div class="col text-center">
-                    
                     <?php 
                         //Creat SQL Query to Get Total Revenue Generated
-                        //Aggregate Function in SQL
                         $sql4 = "SELECT SUM(total) AS Total FROM tbl_order WHERE status='Delivered'";
 
                         //Execute the Query

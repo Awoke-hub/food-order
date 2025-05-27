@@ -37,7 +37,6 @@
 
         //Execute the Query
         $res = mysqli_query($conn, $sql);
-
         //Check whether the data is delete from database or not
         if($res==true)
         {
@@ -53,9 +52,6 @@
             //Redirect to Manage Category
             header('location:'.SITEURL.'admin/manage-category.php');
         }
-
- 
-
     }
     else
     {

@@ -69,7 +69,6 @@
                     </tr>
 
                     <?php 
-
                         //Query to Get all CAtegories from Database
                         $sql = "SELECT * FROM tbl_category";
 
@@ -151,13 +150,9 @@
                         }
                     
                     ?>
-
-                    
-
                     
                 </table>
     </div>
     
 </div>
-
 <?php include('partials/footer.php'); ?>

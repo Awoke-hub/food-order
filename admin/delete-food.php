@@ -1,71 +1,55 @@
-<?php 
-    //Include COnstants Page
+<?php
+    // Include constants file session is already started there
     include('../config/constants.php');
 
-    //echo "Delete Food Page";
-
-    if(isset($_GET['id']) && isset($_GET['image_name'])) //Either use '&&' or 'AND'
+    // Check if parameters are valid
+    if(isset($_GET['id']) && isset($_GET['image_name']))
     {
-        //Process to Delete
-        //echo "Process to Delete";
-
-        //1.  Get ID and Image NAme
-        $id = $_GET['id'];
-        $image_name = $_GET['image_name'];
-
-        //2. Remove the Image if Available
-        //CHeck whether the image is available or not and Delete only if available
-        if($image_name != "")
-        {
-            // IT has image and need to remove from folder
-            //Get the Image Path
+        // Sanitize inputs
+        $id = (int)$_GET['id'];
+        $image_name = basename($_GET['image_name']);
+        // Validate parameters
+        if($id <= 0 || !preg_match('/^[a-z0-9_\-\.]+$/i', $image_name)) {
+            $_SESSION['unauthorize'] = "<div class='error'>Invalid request parameters!</div>";
+            header('Location: '.SITEURL.'admin/manage-food.php');
+            exit();
+        }
+        // Remove image if exists
+        if(!empty($image_name)) {
             $path = "../images/food/".$image_name;
-
-            //REmove Image File from Folder
-            $remove = unlink($path);
-
-            //Check whether the image is removed or not
-            if($remove==false)
-            {
-                //Failed to Remove image
-                $_SESSION['upload'] = "<div class='error'>Failed to Remove Image File.</div>";
-                //REdirect to Manage Food
-                header('location:'.SITEURL.'admin/manage-food.php');
-                //Stop the Process of Deleting Food
-                die();
+            
+            if(file_exists($path) && is_file($path)) {
+                if(!unlink($path)) {
+                    $_SESSION['upload'] = "<div class='error'>Failed to remove image file.</div>";
+                    header('Location: '.SITEURL.'admin/manage-food.php');
+                    exit();
+                }
             }
-
         }
 
-        //3. Delete Food from Database
-        $sql = "DELETE FROM tbl_food WHERE id=$id";
-        //Execute the Query
-        $res = mysqli_query($conn, $sql);
-
-        //CHeck whether the query executed or not and set the session message respectively
-        //4. Redirect to Manage Food with Session Message
-        if($res==true)
-        {
-            //Food Deleted
-            $_SESSION['delete'] = "<div class='success'>Food Deleted Successfully.</div>";
-            header('location:'.SITEURL.'admin/manage-food.php');
-        }
-        else
-        {
-            //Failed to Delete Food
-            $_SESSION['delete'] = "<div class='error'>Failed to Delete Food.</div>";
-            header('location:'.SITEURL.'admin/manage-food.php');
-        }
-
+        // Delete from database using prepared statement
+        $sql = "DELETE FROM tbl_food WHERE id = ?";
+        $stmt = mysqli_prepare($conn, $sql);
         
+        if($stmt) {
+            mysqli_stmt_bind_param($stmt, "i", $id);
+            if(mysqli_stmt_execute($stmt)) {
+                $_SESSION['delete'] = "<div class='success'>Food deleted successfully.</div>";
+            } else {
+                $_SESSION['delete'] = "<div class='error'>Failed to delete food: ".mysqli_error($conn)."</div>";
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            $_SESSION['delete'] = "<div class='error'>Database error: ".mysqli_error($conn)."</div>";
+        }
+        // Redirect to manage food page
+        header('Location: '.SITEURL.'admin/manage-food.php');
+        exit();
 
+    } else {
+        // Invalid request
+        $_SESSION['unauthorize'] = "<div class='error'>Unauthorized access attempt!</div>";
+        header('Location: '.SITEURL.'admin/manage-food.php');
+        exit();
     }
-    else
-    {
-        //Redirect to Manage Food Page
-        //echo "REdirect";
-        $_SESSION['unauthorize'] = "<div class='error'>Unauthorized Access.</div>";
-        header('location:'.SITEURL.'admin/manage-food.php');
-    }
-
 ?>

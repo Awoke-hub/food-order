@@ -4,8 +4,6 @@
     include('login-check.php');
 
 ?>
-
-
 <html>
     <head>
         <title>Food Order Website - Home Page</title>
@@ -14,11 +12,8 @@
     "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
             integrity=
     "sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-            crossorigin="anonymous"> 
-     
-        
+            crossorigin="anonymous">    
     </head>
-    
     <body>
         <!-- Menu Section Starts -->
         <div class="menu text-center">

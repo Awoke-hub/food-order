@@ -113,8 +113,4 @@
 
  
                 </table>
- 
-    
-
-
 <?php include('partials/footer.php'); ?>
