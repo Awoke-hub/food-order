@@ -64,12 +64,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 echo "Oops! Something went wrong. Please try again later.";
             }
 
-            // Close statement
             mysqli_stmt_close($stmt);
         }
     }
-    
-    // Close connection
     mysqli_close($conn);
 }
 ?>
@@ -83,19 +80,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <link rel="icon" type="image/png" href="images/logo.jpg">
 </head>
 <body>
-    <!-- Navbar Section Starts Here -->
     <section class="navbar">
         <div class="container">
-            <div class="logo">
-                <a href="http://localhost/food-order-main/images/logo.jpg" title="Logo">
-                    <img src="images/logo.jp" alt="Restaurant Logo" class="img-responsive">
-                </a>
-            </div>
 <br>
             <div class="clearfix"></div>
         </div>
     </section>
-    <!-- Navbar Section Ends Here -->
     <div class="wrapper">
     <div class="container my-4 ">
         <h2>Login</h2>

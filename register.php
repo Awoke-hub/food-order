@@ -79,7 +79,7 @@ $conn->close();
         <div class="container">
             <div class="logo">
                 <a href="http://localhost/food-order">
-                    <img src="images/logo.jp" alt="Restaurant Logo" class="Restaurant-logo">
+                    <img src="images/logo.jpg" alt="Restaurant Logo" class="restaurant-logo">
                 </a>
             </div>
             <div class="clearfix"></div>
