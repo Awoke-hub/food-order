@@ -20,7 +20,6 @@
     <section class="categories">
         <div class="container">
             <h2 class="text-center">Explore Foods</h2>
-
             <?php 
                 //Create SQL Query to Display CAtegories from Database
                 $sql = "SELECT * FROM tbl_category WHERE active='Yes' AND featured='Yes' LIMIT 3";
@@ -153,7 +152,7 @@
         </div>
 
         <p class="text-center">
-            <a href="http://localhost/food-order-main/foods.php">See All Foods</a>
+            <a href="http://localhost/food-order/foods.php">See All Foods</a>
         </p>
     </section>
     <!-- fOOD Menu Section Ends Here -->
